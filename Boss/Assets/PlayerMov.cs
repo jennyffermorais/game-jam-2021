@@ -1,33 +1,41 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMov : MonoBehaviour
 {
+    public float HP = 60;
     public Rigidbody2D rb;
     public float jumpHeight = 18f;
     public float walkSpeed = 5f;
     public bool canJump;
-    private SpriteRenderer sprite;
+    private SpriteRenderer Render;
     private Animator anim;
 
+    private DateTime? DamageDelay = null;
 
-    void Start()
+    private bool invulnerable = false;
+
+    public void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        sprite = GetComponent<SpriteRenderer>();
+        Render = GetComponent<SpriteRenderer>();
         anim =  GetComponent<Animator> ();
-
+        
     }
 
-    void Update()
+    public void Update()
     {
         JumpFunction();
-        WalkFunction();        
+        WalkFunction();
+        Damage();
+
+        if(DamageDelay.HasValue) SetVulnerability();
     }
 
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.name == "Floor")
         {
@@ -35,7 +43,7 @@ public class PlayerMov : MonoBehaviour
         }
     }
 
-    void JumpFunction()
+    private void JumpFunction()
     {
         if (Input.GetButtonDown("Jump") && canJump)
         {
@@ -48,10 +56,10 @@ public class PlayerMov : MonoBehaviour
             canJump = false;
         }
     }
-    void WalkFunction()    
+    private void WalkFunction()    
     {
         var move = Input.GetAxis("Horizontal");
-        if ((move > 0f && sprite.flipX) || (move < 0f && !sprite.flipX)) Flip();
+        if ((move > 0f && Render.flipX) || (move < 0f && !Render.flipX)) Flip();
 
         if (move > 0)
         {
@@ -65,28 +73,37 @@ public class PlayerMov : MonoBehaviour
         }
     }
 
-    void Flip() {
-        sprite.flipX = !sprite.flipX;
+    private void Flip() {
+        Render.flipX = !Render.flipX;
     }
 
+    private void Damage() 
+    {
+        if (HP <= 0)
+        {
+            Render.color = Color.grey;
+        }
+    }
+    public void DamagePlayer(bossScript boss) 
+    {
+        if(DamageDelay == null) DamageDelay = DateTime.Now;
 
-    // IEnumerator Damage() {
-    //     for(float i = 0f; i < if; i += 0.1f) {
-    //         sprite.enabled = false;
-    //         yield return new WaitForSeconds(0.1f);
-    //         sprite.enabled = true;
-    //         yield return new WaitForSeconds (0.1f);
-    //     }
-    //     invunerable = false;
-    // }
-    // public void DamagePlayer() {
-    //     invunerable = true;
-    //     health--;
-    //     StartCoroutine(Damage ());
+        if(!invulnerable) {
+            HP -= 20;
+            Debug.Log($"[Hero]: Damage HP: {HP}");
+        }
+    }
 
-    //     if (health < 1) {
-    //         Debug.Log("Morreu");
-    //     }
-    // }
-
+    private void SetVulnerability() 
+    {
+        var timeNow = DateTime.Now;
+        if(DamageDelay.HasValue && (timeNow - DamageDelay.Value).Seconds < 3){
+            invulnerable = true;
+        }
+        else 
+        {
+            invulnerable = false;
+            DamageDelay = null;
+        }
+    }
 }

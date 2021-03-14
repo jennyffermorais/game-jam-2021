@@ -1,5 +1,5 @@
 <div align="center" id="top"> 
-  <img src="./.github/app.gif" alt="Game Jam 2021" />
+  <img src="./game.jpg" alt="Game Jam 2021" />
 
   &#xa0;
 

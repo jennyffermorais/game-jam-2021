@@ -15,7 +15,7 @@ public class PlayerMov : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        sprite = GetComponent<SpriteRenderer> ();
+        sprite = GetComponent<SpriteRenderer>();
         anim =  GetComponent<Animator> ();
 
     }

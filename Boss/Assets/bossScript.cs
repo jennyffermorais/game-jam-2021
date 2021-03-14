@@ -15,7 +15,7 @@ public class bossScript : MonoBehaviour
 
     public GameObject explosion;
     public Sprite[] sprites;
-    //private SpriteRenderer sprite;
+    private SpriteRenderer Render;
 
     bool dead;
 
@@ -23,6 +23,7 @@ public class bossScript : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        Render = GetComponent<SpriteRenderer>();
         StartCoroutine("boss");
     }
 
@@ -32,7 +33,7 @@ public class bossScript : MonoBehaviour
         if (hp <= 0 && !dead)
         {
             dead = true;
-            GetComponent<SpriteRenderer>().color = Color.grey;
+            Render.color = Color.grey;
             StopCoroutine("boss");
             Instantiate(explosion, transform.position, Quaternion.identity);
         }
@@ -41,7 +42,7 @@ public class bossScript : MonoBehaviour
 
 
     void Flip() {
-        GetComponent<SpriteRenderer>().flipX = !GetComponent<SpriteRenderer>().flipX;
+        Render.flipX = !Render.flipX;
     }
 
     IEnumerator boss()
@@ -51,23 +52,21 @@ public class bossScript : MonoBehaviour
             var vulnerableTime = DateTime.Now;
             Debug.Log($"[Enemy] -> vulnerable: {vulnerable}");
             vulnerable = false;
-            GetComponent<SpriteRenderer>().sprite = sprites[1];
+            Render.sprite = sprites[1];
             while (transform.position.x != player.transform.position.x && (DateTime.Now - vulnerableTime).Seconds < 5)
             {
                 var move = player.transform.position.x - transform.position.x;
 
-                //if((move > 0f && sprite.flipX) || (move < 0f && !sprite.flipX)) Flip();
+                if((move > 0f && !Render.flipX) || (move < 0f && Render.flipX)) Flip();
 
                 transform.position = Vector2.MoveTowards(transform.position, new Vector2(player.transform.position.x, transform.position.y), speed);
 
                 yield return null;
             }
 
-            Flip();
-
             Debug.Log($"[Enemy] -> Hp: {hp}");
             vulnerable = true;
-            GetComponent<SpriteRenderer>().sprite = sprites[0];
+            Render.sprite = sprites[0];
 
             Debug.Log($"[Enemy] -> vulnerable: {vulnerable}");
 
@@ -86,7 +85,7 @@ public class bossScript : MonoBehaviour
         {
             hp -= 20;
             vulnerable = false;
-            GetComponent<SpriteRenderer>().sprite = sprites[1];
+            Render.sprite = sprites[1];
         }
     }
 

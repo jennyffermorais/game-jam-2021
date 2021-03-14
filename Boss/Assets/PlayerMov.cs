@@ -5,13 +5,12 @@ using UnityEngine;
 public class PlayerMov : MonoBehaviour
 {
     public Rigidbody2D rb;
-    public float jumpHeight = 24f;
+    public float jumpHeight = 18f;
     public float walkSpeed = 5f;
     public bool canJump;
     private SpriteRenderer sprite;
     private Animator anim;
 
-    public Transform BulletSpawn;
 
     void Start()
     {
@@ -49,9 +48,7 @@ public class PlayerMov : MonoBehaviour
             canJump = false;
         }
     }
-    void WalkFunction()
-
-    
+    void WalkFunction()    
     {
         var move = Input.GetAxis("Horizontal");
         if ((move > 0f && sprite.flipX) || (move < 0f && !sprite.flipX)) Flip();

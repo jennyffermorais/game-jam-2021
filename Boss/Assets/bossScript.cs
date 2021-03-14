@@ -15,6 +15,8 @@ public class bossScript : MonoBehaviour
 
     public GameObject explosion;
     public Sprite[] sprites;
+    //private SpriteRenderer sprite;
+
     bool dead;
 
     // Use this for initialization
@@ -36,26 +38,32 @@ public class bossScript : MonoBehaviour
         }
     }
 
+
+
+    void Flip() {
+        GetComponent<SpriteRenderer>().flipX = !GetComponent<SpriteRenderer>().flipX;
+    }
+
     IEnumerator boss()
     {
         while (true)
         {
-            //FIRST ATTACK
-
             var vulnerableTime = DateTime.Now;
             Debug.Log($"[Enemy] -> vulnerable: {vulnerable}");
             vulnerable = false;
             GetComponent<SpriteRenderer>().sprite = sprites[1];
             while (transform.position.x != player.transform.position.x && (DateTime.Now - vulnerableTime).Seconds < 5)
             {
-                
-                transform.position = Vector2.MoveTowards(transform.position, new Vector2(player.transform.position.x, transform.position.y), speed);
+                var move = player.transform.position.x - transform.position.x;
 
-                // se toquri no heroi 
-                // player.Damage(this);
+                //if((move > 0f && sprite.flipX) || (move < 0f && !sprite.flipX)) Flip();
+
+                transform.position = Vector2.MoveTowards(transform.position, new Vector2(player.transform.position.x, transform.position.y), speed);
 
                 yield return null;
             }
+
+            Flip();
 
             Debug.Log($"[Enemy] -> Hp: {hp}");
             vulnerable = true;
@@ -68,70 +76,6 @@ public class bossScript : MonoBehaviour
             }
 
             yield return new WaitForSeconds(1);
-
-
-            // int i = 0;
-            // while (i < 6)
-            // {
-
-            //     GameObject bullet = (GameObject)Instantiate(projectile, holes[Random.Range(0, 2)].position, Quaternion.identity);
-            //     bullet.GetComponent<Rigidbody2D>().velocity = Vector2.left * 5;
-
-            //     i++;
-            //     yield return new WaitForSeconds(.7f);
-            // }
-
-
-            //SECOND ATTACK
-            // GetComponent<Rigidbody2D>().isKinematic = true;
-            // while (transform.position != spots[1].position)
-            // {
-            //     Debug.Log("SECOND ATTACK");
-            //     Debug.Log("Spot 1: " + spots[1].tag);
-            //     transform.position = Vector2.MoveTowards(transform.position, spots[1].position, speed);
-
-            //     yield return null;
-            // }
-
-            //playerPos = player.transform.position;
-
-            // yield return new WaitForSeconds(1f);
-            // GetComponent<Rigidbody2D>().isKinematic = false;
-
-            // while (transform.position.x != playerPos.x)
-            // {
-
-            //     transform.position = Vector2.MoveTowards(transform.position, new Vector2(playerPos.x, transform.position.y), speed);
-
-            //     yield return null;
-            // }
-
-            // yield return new WaitForSeconds(2);
-
-            // this.tag = "Untagged";
-            // GetComponent<SpriteRenderer>().sprite = sprites[1];
-            
-            // yield return new WaitForSeconds(4);
-            // this.tag = "Deadly";
-            // GetComponent<SpriteRenderer>().sprite = sprites[0];
-            // vulnerable = false;
-
-            //THIRD ATTACK
-            // Transform temp;
-            // if (transform.position.x > player.transform.position.x)
-            //     temp = spots[1];
-            // else
-            //     temp = spots[0];
-
-            // while (transform.position.x != temp.position.x)
-            // {
-
-            //     transform.position = Vector2.MoveTowards(transform.position, new Vector2(temp.position.x, transform.position.y), speed);
-
-            //     yield return null;
-            // }
-
-
         }
 
     }

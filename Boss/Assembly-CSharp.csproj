@@ -38,6 +38,7 @@
   <ItemGroup>
      <Compile Include="Assets\AudioController.cs" />
      <Compile Include="Assets\Destroy.cs" />
+     <Compile Include="Assets\PlayerDano.cs" />
      <Compile Include="Assets\PlayerMov.cs" />
      <Compile Include="Assets\bossScript.cs" />
     <Reference Include="UnityEngine">

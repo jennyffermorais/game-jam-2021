@@ -8,17 +8,25 @@ public class PlayerMov : MonoBehaviour
     public float jumpHeight = 24f;
     public float walkSpeed = 5f;
     public bool canJump;
+    private SpriteRenderer sprite;
+    private Animator anim;
+
+    public Transform BulletSpawn;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        sprite = GetComponent<SpriteRenderer> ();
+        anim =  GetComponent<Animator> ();
+
     }
 
     void Update()
     {
         JumpFunction();
-        WalkFunction();
+        WalkFunction();        
     }
+
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -42,14 +50,46 @@ public class PlayerMov : MonoBehaviour
         }
     }
     void WalkFunction()
+
+    
     {
-        if (Input.GetAxis("Horizontal") > 0)
+        var move = Input.GetAxis("Horizontal");
+        if ((move > 0f && sprite.flipX) || (move < 0f && !sprite.flipX)) Flip();
+
+        if (move > 0)
         {
             transform.Translate(Vector2.left * walkSpeed * Time.deltaTime);
+           
         }
-        else if (Input.GetAxis("Horizontal") < 0)
+        else if (move < 0)
         {
+            
             transform.Translate(Vector2.right * walkSpeed * Time.deltaTime);
         }
     }
+
+    void Flip() {
+        sprite.flipX = !sprite.flipX;
+    }
+
+
+    // IEnumerator Damage() {
+    //     for(float i = 0f; i < if; i += 0.1f) {
+    //         sprite.enabled = false;
+    //         yield return new WaitForSeconds(0.1f);
+    //         sprite.enabled = true;
+    //         yield return new WaitForSeconds (0.1f);
+    //     }
+    //     invunerable = false;
+    // }
+    // public void DamagePlayer() {
+    //     invunerable = true;
+    //     health--;
+    //     StartCoroutine(Damage ());
+
+    //     if (health < 1) {
+    //         Debug.Log("Morreu");
+    //     }
+    // }
+
 }

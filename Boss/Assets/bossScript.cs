@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class bossScript : MonoBehaviour
 {
-    public float hp = 100;
+    public float hp = 50;
     public Transform[] spots;
     public float speed;
     public GameObject projectile;
@@ -42,19 +42,33 @@ public class bossScript : MonoBehaviour
         {
             //FIRST ATTACK
 
-            while (transform.position.x != player.transform.position.x)
+            var vulnerableTime = DateTime.Now;
+            Debug.Log($"[Enemy] -> vulnerable: {vulnerable}");
+            vulnerable = false;
+            GetComponent<SpriteRenderer>().sprite = sprites[1];
+            while (transform.position.x != player.transform.position.x && (DateTime.Now - vulnerableTime).Seconds < 5)
             {
                 
                 transform.position = Vector2.MoveTowards(transform.position, new Vector2(player.transform.position.x, transform.position.y), speed);
+
+                // se toquri no heroi 
+                // player.Damage(this);
 
                 yield return null;
             }
 
             Debug.Log($"[Enemy] -> Hp: {hp}");
+            vulnerable = true;
+            GetComponent<SpriteRenderer>().sprite = sprites[0];
 
-            //transform.localScale = new Vector2(-1, 1);
+            Debug.Log($"[Enemy] -> vulnerable: {vulnerable}");
 
-            yield return new WaitForSeconds(3);
+            while((DateTime.Now - vulnerableTime).Seconds <= 6 && vulnerable){
+                yield return null;
+            }
+
+            yield return new WaitForSeconds(1);
+
 
             // int i = 0;
             // while (i < 6)
@@ -126,9 +140,9 @@ public class bossScript : MonoBehaviour
     {
         if (col.collider.tag == "Player" && vulnerable)
         {
-            hp -= 30;
+            hp -= 20;
             vulnerable = false;
-            GetComponent<SpriteRenderer>().sprite = sprites[0];
+            GetComponent<SpriteRenderer>().sprite = sprites[1];
         }
     }
 

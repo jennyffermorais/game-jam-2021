@@ -21,8 +21,8 @@ public class PlayerMov : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         Render = GetComponent<SpriteRenderer>();
-        anim =  GetComponent<Animator> ();
-        
+        anim = GetComponent<Animator>();
+
     }
 
     public void Update()
@@ -31,7 +31,7 @@ public class PlayerMov : MonoBehaviour
         WalkFunction();
         Damage();
 
-        if(DamageDelay.HasValue) SetVulnerability();
+        if (DamageDelay.HasValue) SetVulnerability();
     }
 
 
@@ -56,7 +56,7 @@ public class PlayerMov : MonoBehaviour
             canJump = false;
         }
     }
-    private void WalkFunction()    
+    private void WalkFunction()
     {
         var move = Input.GetAxis("Horizontal");
         if ((move > 0f && Render.flipX) || (move < 0f && !Render.flipX)) Flip();
@@ -64,43 +64,51 @@ public class PlayerMov : MonoBehaviour
         if (move > 0)
         {
             transform.Translate(Vector2.left * walkSpeed * Time.deltaTime);
-           
+
         }
         else if (move < 0)
         {
-            
+
             transform.Translate(Vector2.right * walkSpeed * Time.deltaTime);
         }
     }
 
-    private void Flip() {
+    private void Flip()
+    {
         Render.flipX = !Render.flipX;
     }
 
-    private void Damage() 
+    private void Damage()
     {
         if (HP <= 0)
         {
             Render.color = Color.grey;
+
         }
     }
-    public void DamagePlayer(bossScript boss) 
+    public void DamagePlayer(bossScript boss)
     {
-        if(DamageDelay == null) DamageDelay = DateTime.Now;
+        if (DamageDelay == null) DamageDelay = DateTime.Now;
 
-        if(!invulnerable) {
+        if (!invulnerable)
+        {
             HP -= 20;
+            Render.color = Color.red;
+            // yield return new WaitForSeconds(0.1f);
+            Render.color = Color.white;
+
             Debug.Log($"[Hero]: Damage HP: {HP}");
         }
     }
 
-    private void SetVulnerability() 
+    private void SetVulnerability()
     {
         var timeNow = DateTime.Now;
-        if(DamageDelay.HasValue && (timeNow - DamageDelay.Value).Seconds < 3){
+        if (DamageDelay.HasValue && (timeNow - DamageDelay.Value).Seconds < 3)
+        {
             invulnerable = true;
         }
-        else 
+        else
         {
             invulnerable = false;
             DamageDelay = null;

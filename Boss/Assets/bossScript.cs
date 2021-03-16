@@ -33,8 +33,7 @@ public class bossScript : MonoBehaviour
         if (hp <= 0 && !dead)
         {
             dead = true;
-            Render.color = Color.grey;
-            StopCoroutine("boss");
+
         }
     }
 
@@ -74,7 +73,7 @@ public class bossScript : MonoBehaviour
 
     }
 
-    void OnCollisionEnter2D(Collision2D col)
+    protected void OnCollisionEnter2D(Collision2D col)
     {
         if (col.collider.tag == "Player" && vulnerable == States.BLOCKED)
         {
@@ -85,7 +84,29 @@ public class bossScript : MonoBehaviour
         if (col.collider.tag == "Player" && vulnerable == States.DAMAGE)
         {
             hp -= 20;
+
+            StartCoroutine(Damage());
+
+        }
+
+
+    }
+
+    IEnumerator Damage()
+    {
+
+        if (hp >= 1)
+        {
+            Render.color = Color.red;
+            yield return new WaitForSeconds(0.1f);
+            Render.color = Color.white;
             vulnerable = States.STAGE;
+        }
+
+        else if (hp < 1)
+        {
+            Render.color = Color.grey;
+            StopCoroutine("boss");
         }
     }
 

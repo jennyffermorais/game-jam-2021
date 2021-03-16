@@ -24,7 +24,7 @@ public class PlayerMov : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         Render = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
-        StartCoroutine("player");
+        //StartCoroutine("player");
 
     }
 
@@ -104,15 +104,16 @@ public class PlayerMov : MonoBehaviour
     {
         if (HP >= 1)
         {
-            Render.color = Color.red;
+            Render.enabled = false;
             yield return new WaitForSeconds(0.1f);
-            Render.color = Color.white;
+            Render.enabled = true;
+
         }
 
         else if (HP < 1)
         {
             Render.color = Color.grey;
-            StopCoroutine("player");
+            //StopCoroutine("boss");
         }
     }
 

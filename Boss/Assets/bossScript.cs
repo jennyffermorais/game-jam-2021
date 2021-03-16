@@ -84,7 +84,6 @@ public class bossScript : MonoBehaviour
         if (col.collider.tag == "Player" && vulnerable == States.DAMAGE)
         {
             hp -= 20;
-
             StartCoroutine(Damage());
 
         }

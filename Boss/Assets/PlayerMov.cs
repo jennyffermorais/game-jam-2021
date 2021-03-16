@@ -16,12 +16,15 @@ public class PlayerMov : MonoBehaviour
     private DateTime? DamageDelay = null;
 
     private bool invulnerable = false;
+    private bool dead;
+
 
     public void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         Render = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        StartCoroutine("player");
 
     }
 
@@ -32,6 +35,12 @@ public class PlayerMov : MonoBehaviour
         Damage();
 
         if (DamageDelay.HasValue) SetVulnerability();
+
+        if (HP <= 0 && !dead)
+        {
+            dead = true;
+
+        }
     }
 
 
@@ -78,26 +87,32 @@ public class PlayerMov : MonoBehaviour
         Render.flipX = !Render.flipX;
     }
 
-    private void Damage()
-    {
-        if (HP <= 0)
-        {
-            Render.color = Color.grey;
 
-        }
-    }
     public void DamagePlayer(bossScript boss)
     {
         if (DamageDelay == null) DamageDelay = DateTime.Now;
 
-        if (!invulnerable)
+        if (!invulnerable) //tá vulnerável
         {
             HP -= 20;
-            Render.color = Color.red;
-            // yield return new WaitForSeconds(0.1f);
-            Render.color = Color.white;
-
+            StartCoroutine(Damage());
             Debug.Log($"[Hero]: Damage HP: {HP}");
+        }
+    }
+
+    IEnumerator Damage()
+    {
+        if (HP >= 1)
+        {
+            Render.color = Color.red;
+            yield return new WaitForSeconds(0.1f);
+            Render.color = Color.white;
+        }
+
+        else if (HP < 1)
+        {
+            Render.color = Color.grey;
+            StopCoroutine("player");
         }
     }
 

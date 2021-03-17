@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMov : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class PlayerMov : MonoBehaviour
     private bool dead;
 
 
+
+
     public void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -30,17 +33,20 @@ public class PlayerMov : MonoBehaviour
 
     public void Update()
     {
-        JumpFunction();
-        WalkFunction();
+        if (!dead)
+        {
+            JumpFunction();
+            WalkFunction();
+        }
         Damage();
 
         if (DamageDelay.HasValue) SetVulnerability();
 
-        if (HP <= 0 && !dead)
-        {
-            dead = true;
+        // if (HP <= 0 && !dead)
+        // {
+        //     dead = true;
 
-        }
+        // }
     }
 
 
@@ -113,7 +119,10 @@ public class PlayerMov : MonoBehaviour
         else if (HP < 1)
         {
             Render.color = Color.grey;
-            //StopCoroutine("boss");
+            dead = true;
+            //inserir aqui a animação de morte
+            Invoke("ReloadLevel", 3f);
+
         }
     }
 
@@ -129,5 +138,10 @@ public class PlayerMov : MonoBehaviour
             invulnerable = false;
             DamageDelay = null;
         }
+    }
+
+    void ReloadLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

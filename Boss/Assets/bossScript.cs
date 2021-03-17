@@ -33,7 +33,6 @@ public class bossScript : MonoBehaviour
         if (hp <= 0 && !dead)
         {
             dead = true;
-
         }
     }
 
@@ -52,11 +51,8 @@ public class bossScript : MonoBehaviour
             while (transform.position.x != player.transform.position.x && (DateTime.Now - vulnerableTime).Seconds < 5)
             {
                 var move = player.transform.position.x - transform.position.x;
-
                 if ((move > 0f && !Render.flipX) || (move < 0f && Render.flipX)) Flip();
-
                 transform.position = Vector2.MoveTowards(transform.position, new Vector2(player.transform.position.x, transform.position.y), speed);
-
                 yield return null;
             }
 
@@ -67,7 +63,6 @@ public class bossScript : MonoBehaviour
             {
                 yield return null;
             }
-
             yield return new WaitForSeconds(1);
         }
 
@@ -85,15 +80,11 @@ public class bossScript : MonoBehaviour
         {
             hp -= 20;
             StartCoroutine(Damage());
-
         }
-
-
     }
 
     IEnumerator Damage()
     {
-
         if (hp >= 1)
         {
             Render.color = Color.red;
@@ -101,14 +92,12 @@ public class bossScript : MonoBehaviour
             Render.color = Color.white;
             vulnerable = States.STAGE;
         }
-
         else if (hp < 1)
         {
             Render.color = Color.grey;
             StopCoroutine("boss");
         }
     }
-
 }
 
 public enum States

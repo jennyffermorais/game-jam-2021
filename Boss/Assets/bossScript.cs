@@ -17,7 +17,8 @@ public class bossScript : MonoBehaviour
     public Sprite[] sprites;
     private SpriteRenderer Render;
 
-    private bool dead;
+    public bool dead { get; private set; }
+
 
     // Use this for initialization
     public void Start()
@@ -48,7 +49,7 @@ public class bossScript : MonoBehaviour
             var vulnerableTime = DateTime.Now;
             vulnerable = States.BLOCKED;
             Render.sprite = sprites[1];
-            while (transform.position.x != player.transform.position.x && (DateTime.Now - vulnerableTime).Seconds < 5)
+            while (transform.position.x != player.transform.position.x && (DateTime.Now - vulnerableTime).Seconds < 5 && !player.dead)
             {
                 var move = player.transform.position.x - transform.position.x;
                 if ((move > 0f && !Render.flipX) || (move < 0f && Render.flipX)) Flip();

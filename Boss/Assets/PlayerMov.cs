@@ -17,13 +17,13 @@ public class PlayerMov : MonoBehaviour
     private DateTime? DamageDelay = null;
 
     private bool invulnerable = false;
-    private bool dead;
 
-
-
+    bossScript boss;
+    public bool dead { get; private set; }
 
     public void Start()
     {
+        boss = GameObject.FindGameObjectWithTag("Deadly").GetComponent<bossScript>();
         rb = GetComponent<Rigidbody2D>();
         Render = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
@@ -33,7 +33,7 @@ public class PlayerMov : MonoBehaviour
 
     public void Update()
     {
-        if (!dead)
+        if (!dead && !boss.dead)
         {
             JumpFunction();
             WalkFunction();
@@ -98,7 +98,7 @@ public class PlayerMov : MonoBehaviour
     {
         if (DamageDelay == null) DamageDelay = DateTime.Now;
 
-        if (!invulnerable) //tá vulnerável
+        if (!invulnerable && !dead) //tá vulnerável e tá vivo
         {
             HP -= 20;
             StartCoroutine(Damage());
